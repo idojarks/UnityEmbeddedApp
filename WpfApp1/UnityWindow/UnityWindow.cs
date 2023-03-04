@@ -9,9 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WpfApp1.UnityWindow
+namespace WpfApp1
 {
-  internal class UnityWindow
+  internal sealed class UnityWindow
   {
     [DllImport("User32.dll")]
     static extern bool MoveWindow(IntPtr handle, int x, int y, int width, int height, bool redraw);
@@ -35,32 +35,35 @@ namespace WpfApp1.UnityWindow
     private const int WM_ACTIVATE = 0x0006;
     private readonly IntPtr WA_ACTIVE = new IntPtr(1);
     private readonly IntPtr WA_INACTIVE = new IntPtr(0);
-    private const int SWP_NOMOVE = 0x0002;
-    private const int SWP_NOOWNERZORDER = 0x0200;
 
-    private Process process;
+    private readonly Process process;
+    private readonly MainWindow mainWindow;
 
-    public UnityWindow(Panel parentPanel) 
+    public static readonly Lazy<UnityWindow> _instance = new Lazy<UnityWindow>(() => new UnityWindow());
+    public static UnityWindow Instance = _instance.Value;
+
+    private UnityWindow() 
     {
-      parent = parentPanel;
+      mainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
+      parent = mainWindow.UnityView;
 
       process = new Process();
       process.StartInfo.FileName = "D:\\study\\unity\\uwp\\output2\\uwp.exe";
-      process.StartInfo.Arguments = "-parentHWND " + parentPanel.Handle.ToInt32() + " " + Environment.CommandLine;
+      process.StartInfo.Arguments = "-parentHWND " + parent.Handle.ToInt32() + " " + Environment.CommandLine;
       process.StartInfo.UseShellExecute = true;
       process.StartInfo.CreateNoWindow = true;
       process.Start();
 
       process.WaitForInputIdle();
 
-      SetParent(process.Handle, parentPanel.Handle);
+      SetParent(process.Handle, parent.Handle);
 
-      EnumChildWindows(parentPanel.Handle, WindowEnum, IntPtr.Zero);
+      EnumChildWindows(parent.Handle, WindowEnum, IntPtr.Zero);
 
       using (AnonymousPipeServerStream pipeServer = 
         new AnonymousPipeServerStream(PipeDirection.Out, System.IO.HandleInheritability.Inheritable))
       {
-
+         
       }
     }
 
