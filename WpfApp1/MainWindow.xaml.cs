@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace WpfApp1
+namespace DreamKit
 {
   /// <summary>
   /// Interaction logic for MainWindow.xaml
