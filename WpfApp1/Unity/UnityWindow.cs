@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DreamKit
+namespace WpfApp1.Unity
 {
   internal sealed class UnityWindow
   {
@@ -39,7 +40,7 @@ namespace DreamKit
     private readonly Process process;
     private readonly MainWindow mainWindow;
 
-    public static readonly Lazy<UnityWindow> _instance = new Lazy<UnityWindow>(() => new UnityWindow());
+    private static readonly Lazy<UnityWindow> _instance = new Lazy<UnityWindow>(() => new UnityWindow());
     public static UnityWindow Instance = _instance.Value;
 
     private UnityWindow() 
@@ -48,8 +49,9 @@ namespace DreamKit
       parent = mainWindow.UnityView;
 
       process = new Process();
+
       process.StartInfo.FileName = "D:\\study\\unity\\uwp\\output2\\uwp.exe";
-      process.StartInfo.Arguments = "-parentHWND " + parent.Handle.ToInt32() + " " + Environment.CommandLine;
+      process.StartInfo.Arguments = "-parentHWND " + parent.Handle.ToInt32();
       process.StartInfo.UseShellExecute = true;
       process.StartInfo.CreateNoWindow = true;
       process.Start();
@@ -59,12 +61,6 @@ namespace DreamKit
       SetParent(process.Handle, parent.Handle);
 
       EnumChildWindows(parent.Handle, WindowEnum, IntPtr.Zero);
-
-      using (AnonymousPipeServerStream pipeServer = 
-        new AnonymousPipeServerStream(PipeDirection.Out, System.IO.HandleInheritability.Inheritable))
-      {
-         
-      }
     }
 
     private int WindowEnum(IntPtr hwnd, IntPtr lparam)
