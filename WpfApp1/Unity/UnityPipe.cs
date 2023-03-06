@@ -51,6 +51,11 @@ namespace WpfApp1.Unity
 
     void ReadCallback(IAsyncResult ar)
     {
+      if (!isConnected)
+      {
+        return;
+      }
+
       var bytesRead = 0;
 
       try
@@ -81,7 +86,9 @@ namespace WpfApp1.Unity
       if (isConnected == true)
       {
         isConnected = false;
+
         pipeClient.Dispose();
+        pipeClient.Close();
       }
     }
 

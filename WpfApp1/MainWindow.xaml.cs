@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using WpfApp1.Objects;
 
 namespace WpfApp1
 {
@@ -29,6 +30,16 @@ namespace WpfApp1
     {
       Unity.UnityPipe.Instance.Disconnect();
       Unity.UnityWindow.Instance.Close();
+    }
+
+    private void Objects_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      ObjectsControl.Instance.OnMouseDown(e);
+    }
+
+    private void ObjectsContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+      ObjectsControl.Instance.OnContextMenuOpened();
     }
   }
 }

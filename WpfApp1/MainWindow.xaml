@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="900"
         Closed="Window_Closed">
-  
+   
   <DockPanel LastChildFill="True">
     <ToolBarTray DockPanel.Dock="Top">
       <ToolBar>
@@ -27,7 +27,19 @@
         </GridView>
       </ListView.View>
     </ListView>
-    <TreeView x:Name="Objects" DockPanel.Dock="Right" Width="100"/>
+    
+    <TreeView x:Name="Objects" 
+              DockPanel.Dock="Right" 
+              Width="200"
+              MouseDown="Objects_MouseDown">
+      <TreeView.ContextMenu>
+        <ContextMenu Name="ObjectsContextMenu"
+                     Opened="ObjectsContextMenu_Opened"
+                     IsOpen="False">
+        </ContextMenu>
+      </TreeView.ContextMenu>
+    </TreeView>
+    
     <WindowsFormsHost x:Name="UnityViewFrame" 
                         VerticalAlignment="Stretch" 
                         HorizontalAlignment="Stretch">
@@ -38,4 +50,6 @@
       </wf:Panel>
     </WindowsFormsHost>
   </DockPanel>
+
+  
 </Window>
