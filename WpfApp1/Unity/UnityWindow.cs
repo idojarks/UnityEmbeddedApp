@@ -38,14 +38,14 @@ namespace WpfApp1.Unity
     private readonly IntPtr WA_INACTIVE = new IntPtr(0);
 
     private readonly Process process;
-    private readonly MainWindow mainWindow;
+    private readonly MainWindowWpf mainWindow;
 
     private static readonly Lazy<UnityWindow> _instance = new Lazy<UnityWindow>(() => new UnityWindow());
     public static UnityWindow Instance = _instance.Value;
 
     private UnityWindow() 
     {
-      mainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
+      mainWindow = (MainWindowWpf)System.Windows.Application.Current.MainWindow;
       parent = mainWindow.UnityView;
 
       process = new Process();
@@ -58,7 +58,7 @@ namespace WpfApp1.Unity
 
       process.WaitForInputIdle();
 
-      SetParent(process.Handle, parent.Handle);
+      //SetParent(process.Handle, parent.Handle);
 
       EnumChildWindows(parent.Handle, WindowEnum, IntPtr.Zero);
     }
@@ -92,16 +92,20 @@ namespace WpfApp1.Unity
       {
         process.CloseMainWindow();
 
-        Thread.Sleep(1000);
-
-        while (process.HasExited == false) 
+        var t = Task.Run(async () =>
         {
-          process.Kill();
-        }
+          await Task.Delay(1000);
+
+          while (process.HasExited == false)
+          {
+            process.Kill();
+          }
+        });
+
+        t.Wait();
       }
       catch (Exception)
       {
-
         throw;
       }
     }

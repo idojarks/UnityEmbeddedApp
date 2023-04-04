@@ -8,6 +8,10 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);EMBEDDED_UNITY_PLAYER</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Resources\PORTRT0.bmp" />
   </ItemGroup>
